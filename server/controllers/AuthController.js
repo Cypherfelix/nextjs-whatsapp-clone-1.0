@@ -53,7 +53,7 @@ export const onboardUser = async (req, res, next) => {
     }
 
     const user = await prisma.user.create({
-      user: {
+      data: {
         email,
         name,
         about,

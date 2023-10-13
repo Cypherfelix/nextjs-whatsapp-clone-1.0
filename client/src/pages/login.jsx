@@ -16,11 +16,13 @@ function login() {
 
   const handleLogin = async () => {
     const provider = new GoogleAuthProvider();
-    const {
-      user: { displayName: name, email, photoURL: profileImage },
-    } = await signInWithPopup(firebaseAuth, provider);
 
     try {
+      const {
+        user: { displayName: name, email, photoURL: profileImage },
+        operationType,
+      } = await signInWithPopup(firebaseAuth, provider);
+
       if (email) {
         const { data } = await axios.post(CHECK_USER_ROUTE, {
           email,
@@ -38,7 +40,6 @@ function login() {
             userInfo: {
               name,
               email,
-              profileImage,
               status: "",
             },
           });
@@ -53,10 +54,12 @@ function login() {
             userInfo: {
               name: data.user.name,
               email,
-              profileImage: data.user.profileImage,
-              status: data.user.status,
+              profileImage: data.user.profilePicture,
+              about: data.user.about,
+              status: data.status,
             },
           });
+          console.log(data.user);
           router.push("/");
         }
       }
@@ -67,7 +70,7 @@ function login() {
 
   return (
     <div className="flex justify-center items-center bg-panel-header-background h-screen w-screen flex-col gap-6">
-      <dv className="flex items-center justify-center gap-2 text-white ">
+      <div className="flex items-center justify-center gap-2 text-white ">
         <Image
           src={"/whatsapp.gif"}
           alt="whatsapp"
@@ -76,7 +79,7 @@ function login() {
           priority
         />
         <span className="text-7xl">Whatsapp</span>
-      </dv>
+      </div>
       <button
         className="flex items-center justify-center gap-7 bg-search-input-container-background p-5 rounded-lg"
         onClick={handleLogin}

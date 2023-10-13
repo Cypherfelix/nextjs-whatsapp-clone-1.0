@@ -43,10 +43,11 @@ function onboarding() {
           dispatch({
             type: reducerCases.SET_USER_INFO,
             userInfo: {
-              name,
+              name: data.user.name,
               email,
-              profileImage,
-              status: "",
+              profileImage: data.user.profilePicture,
+              about: data.user.about,
+              status: data.status,
             },
           });
 
