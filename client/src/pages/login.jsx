@@ -1,3 +1,5 @@
+import { useStateProvider } from "@/context/StateContext";
+import { reducerCases } from "@/context/constants";
 import { CHECK_USER_ROUTE } from "@/utils/ApiRoutes";
 import { firebaseAuth } from "@/utils/FirebaseConfig";
 import axios from "axios";
@@ -9,6 +11,9 @@ import { FcGoogle } from "react-icons/fc";
 
 function login() {
   const router = useRouter();
+
+  const [{}, dispatch] = useStateProvider();
+
   const handleLogin = async () => {
     const provider = new GoogleAuthProvider();
     const {
@@ -21,14 +26,45 @@ function login() {
           email,
         });
 
+        console.log(data);
+
         if (!data.user) {
+          dispatch({
+            type: reducerCases.SET_NEW_USER,
+            newUser: true,
+          });
+          dispatch({
+            type: reducerCases.SET_USER_INFO,
+            userInfo: {
+              name,
+              email,
+              profileImage,
+              status: "",
+            },
+          });
           router.push("/onboarding");
+        } else {
+          dispatch({
+            type: reducerCases.SET_NEW_USER,
+            newUser: false,
+          });
+          dispatch({
+            type: reducerCases.SET_USER_INFO,
+            userInfo: {
+              name: data.user.name,
+              email,
+              profileImage: data.user.profileImage,
+              status: data.user.status,
+            },
+          });
+          router.push("/");
         }
       }
     } catch (err) {
       console.log(err);
     }
   };
+
   return (
     <div className="flex justify-center items-center bg-panel-header-background h-screen w-screen flex-col gap-6">
       <dv className="flex items-center justify-center gap-2 text-white ">
