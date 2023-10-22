@@ -2,7 +2,7 @@
   "type": "module",
   "scripts": {
     "start": "nodemon index.js",
-    "studio": "prisma studio"
+    "studio": "npx prisma db push && prisma studio"
   },
   "dependencies": {
     "@prisma/client": "^4.14.0",

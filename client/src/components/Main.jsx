@@ -5,7 +5,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { firebaseAuth } from "@/utils/FirebaseConfig";
 import { useStateProvider } from "@/context/StateContext";
 import axios from "axios";
-import { CHECK_USER_ROUTE } from "@/utils/ApiRoutes";
+import {CHECK_USER_ROUTE, GET_MESSAGES_ROUTE} from "@/utils/ApiRoutes";
 import { useRouter } from "next/router";
 import { reducerCases } from "@/context/constants";
 import Chat from "./Chat/Chat";
@@ -18,7 +18,7 @@ function Main() {
 
   useEffect(() => {
     if (redirectLogin) {
-      router.push("/login");
+      router.push("/login").then(r => {});
     }
   }, [redirectLogin]);
 
@@ -46,7 +46,7 @@ function Main() {
             status: "",
           },
         });
-        router.push("/onboarding");
+        await router.push("/onboarding");
       } else {
         dispatch({
           type: reducerCases.SET_NEW_USER,
@@ -56,6 +56,7 @@ function Main() {
         dispatch({
           type: reducerCases.SET_USER_INFO,
           userInfo: {
+            id: data.user.id,
             name: data.user.name,
             email: data.user.email,
             profileImage: data.user.profilePicture,
@@ -66,6 +67,29 @@ function Main() {
       }
     }
   });
+
+  useEffect(() => {
+    const getMessages = async () => {
+      try {
+        const { data } = await axios.get(`${GET_MESSAGES_ROUTE}/${userInfo.id}/${currentChatUser.id}`);
+        console.log(data.messages)
+        if (data.messages instanceof Array){
+          dispatch({
+            type: reducerCases.SET_MESSAGES,
+            messages: data.messages
+          });
+        }
+      }catch (e) {
+        console.log(e)
+      }
+    };
+
+    if (userInfo?.id && currentChatUser?.id) {
+        console.log(userInfo, currentChatUser)
+        getMessages().then(r => {});
+    }
+  }, [currentChatUser]);
+
   return (
     <>
       <div className="grid grid-cols-main h-screen w-screen max-h-screen max-w-full overflow-hidden ">
