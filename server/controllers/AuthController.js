@@ -36,8 +36,6 @@ export const onboardUser = async (req, res, next) => {
 
     const prisma = getPrismaInstance();
 
-    //check if user already exists
-
     const userExists = await prisma.user.findUnique({
       where: {
         email,
@@ -65,6 +63,44 @@ export const onboardUser = async (req, res, next) => {
       return res.json({ msg: "User not created", status: false });
     } else {
       return res.json({ msg: "success", status: true, user: user });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getAllUsers = async (req, res, next) => {
+  try {
+    const prisma = getPrismaInstance();
+    const users = await prisma.user.findMany({
+      orderBy: { name: "asc" },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        profilePicture: true,
+        about: true,
+      },
+    });
+
+    if (!users) {
+      return res.json({ msg: "Users not found", status: false });
+    } else {
+      const usersGroupedByInitialLetter = {};
+
+      users.forEach((user) => {
+        const initialLetter = user.name.charAt(0).toUpperCase();
+        if (!usersGroupedByInitialLetter[initialLetter]) {
+          usersGroupedByInitialLetter[initialLetter] = [];
+        }
+        usersGroupedByInitialLetter[initialLetter].push(user);
+      });
+
+      return res.json({
+        msg: "success",
+        status: true,
+        users: usersGroupedByInitialLetter,
+      });
     }
   } catch (error) {
     next(error);
