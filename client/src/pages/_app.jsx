@@ -2,6 +2,7 @@ import { StateProvider } from "@/context/StateContext";
 import reducer, { initialState } from "@/context/StateReducers";
 import "@/styles/globals.css";
 import Head from "next/head";
+import dotenv from "dotenv";
 
 export default function App({ Component, pageProps }) {
   return (

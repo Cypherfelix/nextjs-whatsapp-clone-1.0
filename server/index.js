@@ -20,7 +20,7 @@ app.use("/api", SeedRoutes);
 app.use("/api/messages", MessageRoutes);
 
 const server = app.listen(PORT, () => {
-  console.log(`Server started on ${BASE_URL}:${PORT}`);
+    console.log(`Server started on ${BASE_URL}:${PORT}`);
 });
 const io = new Server(server, {
     cors: {
@@ -29,4 +29,22 @@ const io = new Server(server, {
 });
 
 global.onlineUsers = new Map();
+
+io.on("connection", (socket) => {
+    global.chatSocket = socket;
+    socket.on("add-user", (userId) => {
+        console.log("User connected: ", userId);
+        onlineUsers.set(userId, socket.id);
+    });
+    socket.on("msg-send", (msg) => {
+        console.log("New message: ", msg);
+        const sendUserSocket = onlineUsers.get(msg.to);
+        if (sendUserSocket) {
+            console.log("User is online Emitting message: " + sendUserSocket);
+            socket.to(sendUserSocket).emit("msg-receive", {
+                message: msg.message, from: msg.from,
+            });
+        }
+    });
+});
 

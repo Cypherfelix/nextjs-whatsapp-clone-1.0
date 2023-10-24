@@ -83,12 +83,12 @@ export const getMessages = async (req, res, next) => {
                 }
             });
 
-            res.status(200).json({
+            return res.status(200).json({
                 messages
             });
         }
 
-        res.status(400).send("From and To are required");
+        return  res.status(400).send("From and To are required");
 
     } catch (e) {
         next(e)

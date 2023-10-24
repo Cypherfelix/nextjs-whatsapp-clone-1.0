@@ -1,8 +1,10 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 
+const API_KEY = process.env.REACT_APP_FIREBASE_API_KEY ;
+
 const firebaseConfig = {
-  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  apiKey: "AIzaSyCAYPSTWjAuiC4nQUGaM7TTupMCQVieU5k",
   authDomain: "whats-app-clone-1-0.firebaseapp.com",
   projectId: "whats-app-clone-1-0",
   storageBucket: "whats-app-clone-1-0.appspot.com",
