@@ -6,7 +6,10 @@ function ContextMenu({ options, coordinates, contextMenu, setContextMenu }) {
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (e.target.id === "context-opener") return;
-      if (contextMenuRef.current && !contextMenuRef.current.contains(e.target)) {
+      if (
+        contextMenuRef.current &&
+        !contextMenuRef.current.contains(e.target)
+      ) {
         setContextMenu(false);
       }
     };

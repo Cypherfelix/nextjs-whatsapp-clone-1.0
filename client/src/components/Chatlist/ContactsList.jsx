@@ -30,7 +30,7 @@ function ContactsList() {
       }
     };
 
-    getContacts().then(r => console.log(r));
+    getContacts().then((r) => console.log(r));
   }, []);
   return (
     <div className="h-full flex flex-col ">
@@ -60,22 +60,19 @@ function ContactsList() {
           </div>
         </div>
 
-        {
-          Object.entries(allContacts).map(([initialLetter, userList]) => {
-            return (
-                <div key={initialLetter}>
-                  <div className="text-teal-light pl-10 py-5 "> {initialLetter}</div>
-                  {
-                    userList.map(user => {
-                      return (
-                          <ChatLIstItem key={user.id} user={user} isContactPage/>
-                      )
-                    })
-                  }
-                </div>
-            )
-           })
-        }
+        {Object.entries(allContacts).map(([initialLetter, userList]) => {
+          return (
+            <div key={initialLetter}>
+              <div className="text-teal-light pl-10 py-5 ">
+                {" "}
+                {initialLetter}
+              </div>
+              {userList.map((user) => {
+                return <ChatLIstItem key={user.id} user={user} isContactPage />;
+              })}
+            </div>
+          );
+        })}
       </div>
     </div>
   );

@@ -35,7 +35,7 @@ export const calculateTime = (inputDateStr) => {
     Math.floor((currentDate - inputDate) / (1000 * 60 * 60 * 24)) <= 7
   ) {
     const timeDifference = Math.floor(
-      (currentDate - inputDate) / (1000 * 60 * 60 * 24)
+      (currentDate - inputDate) / (1000 * 60 * 60 * 24),
     );
 
     const targetDate = new Date();

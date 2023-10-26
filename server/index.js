@@ -14,6 +14,7 @@ const BASE_URL = process.env.BASE_URL || "http://localhost";
 
 app.use(cors());
 app.use(express.json({limit: '100mb'}));
+app.use("/uploads/images", express.static("uploads/images"));
 
 app.use("/api/auth", AuthRoutes);
 app.use("/api", SeedRoutes);

@@ -13,7 +13,7 @@ function PhotoPicker({ onChange }) {
   );
   return ReactDOM.createPortal(
     component,
-    document.getElementById("photo-picker-element")
+    document.getElementById("photo-picker-element"),
   );
 }
 

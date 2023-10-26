@@ -12,7 +12,7 @@ export default function App({ Component, pageProps }) {
         <meta name="description" content="Whatsapp clone" />
         <link rel="shortcut icon" href="/favicon.png" />
       </Head>
-      
+
       <Component {...pageProps} />
     </StateProvider>
   );

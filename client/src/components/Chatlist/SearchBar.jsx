@@ -19,7 +19,6 @@ function SearchBar() {
       </div>
       <div className="pr-5 pl-3 ">
         <BsFilter className="text-panel-header-icon cursor-pointer text-lg" />
-
       </div>
     </div>
   );

@@ -5,7 +5,6 @@ import { BsFillChatLeftFill, BsThreeDotsVertical } from "react-icons/bs";
 import { reducerCases } from "@/context/constants";
 
 function ChatListHeader() {
-
   const [{ userInfo }, dispatch] = useStateProvider();
 
   const handleAllContactPage = () => {
@@ -13,7 +12,7 @@ function ChatListHeader() {
       type: reducerCases.SET_ALL_CONTACTS_PAGE,
       payload: true,
     });
-  }
+  };
 
   return (
     <div className="h-16 px-4 py-3 flex justify-between items-center">
