@@ -18,7 +18,7 @@ function ImageMessage({ message }) {
         <Image
           src={`${HOST}/${message.message}`}
           alt={message.id}
-          className={"rounded-lg"}
+          className={"rounded-lg w-auto h-auto"}
           height={300}
           width={300}
         />
