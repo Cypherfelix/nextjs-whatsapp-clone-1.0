@@ -29,7 +29,7 @@ function generateRandomUserData(user) {
 
 async function getRandomUsersFromApi(numberOfUsers) {
   const data = await fetch(
-    `https://randomuser.me/api/?results=${numberOfUsers}`
+    `https://randomuser.me/api/?results=${numberOfUsers}`,
   ).then((res) => res.json());
 
   const users = [];

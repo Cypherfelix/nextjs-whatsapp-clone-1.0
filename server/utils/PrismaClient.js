@@ -9,5 +9,4 @@ function getPrismaInstance() {
   return prismaInstance;
 }
 
-
 export default getPrismaInstance;

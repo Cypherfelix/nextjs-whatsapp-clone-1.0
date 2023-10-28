@@ -53,7 +53,7 @@ export function generateToken04(
   userId,
   secret,
   effectiveTimeInSeconds,
-  payload
+  payload,
 ) {
   if (!appId || typeof appId !== "number") {
     // Check if appID is valid
