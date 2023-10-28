@@ -3,6 +3,11 @@ import { useStateProvider } from "@/context/StateContext";
 import { calculateTime } from "@/utils/CalculateTime";
 import MessageStatus from "@/components/common/MessageStatus";
 import ImageMessage from "@/components/Chat/ImageMessage";
+import dynamic from "next/dynamic";
+// import VoiceMessage from "@/components/Chat/VoiceMessage";
+const VoiceMessage = dynamic(() => import("@/components/Chat/VoiceMessage"), {
+  ssr: false,
+});
 
 function ChatContainer() {
   const [{ messages, currentChatUser, userInfo }, dispatch] =
@@ -15,7 +20,7 @@ function ChatContainer() {
       ></div>
       <div
         className={
-          "w-full h-full px-10 py-6 flex flex-col overflow-y-auto custom-scrollbar relative gap-2"
+          "w-full h-full px-10 py-6 flex flex-col overflow-y-auto custom-scrollbar relative gap-1"
         }
       >
         {messages.map((message, index) => (
@@ -47,6 +52,7 @@ function ChatContainer() {
               </div>
             )}
             {message.type === "image" && <ImageMessage message={message} />}
+            {message.type === "audio" && <VoiceMessage message={message} />}
           </div>
         ))}
       </div>
