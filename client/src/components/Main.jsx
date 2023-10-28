@@ -10,10 +10,12 @@ import { useRouter } from "next/router";
 import { reducerCases } from "@/context/constants";
 import Chat from "./Chat/Chat";
 import { io } from "socket.io-client";
+import SearchMessages from "@/components/Chat/SearchMessages";
 
 function Main() {
   const [redirectLogin, setRedirectLogin] = useState(false);
-  const [{ userInfo, currentChatUser }, dispatch] = useStateProvider();
+  const [{ userInfo, currentChatUser, messageSearch }, dispatch] =
+    useStateProvider();
   const [socketEvent, setSocketEvent] = useState(false);
   // const [socket, setSocket] = useState(io(HOST));
   let socket = useRef(null);
@@ -125,7 +127,14 @@ function Main() {
     <>
       <div className="grid grid-cols-main h-screen w-screen max-h-screen max-w-full overflow-hidden ">
         <ChatList />
-        {currentChatUser ? <Chat /> : <Empty />}
+        {currentChatUser ? (
+          <div className={messageSearch ? "grid grid-cols-2" : "grid-cols-2"}>
+            <Chat />
+            {messageSearch && <SearchMessages />}
+          </div>
+        ) : (
+          <Empty />
+        )}
       </div>
     </>
   );
