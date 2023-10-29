@@ -10,6 +10,8 @@ export const initialState = {
   messageSearch: false,
   onlineUsers: [],
   userContacts: [],
+  filteredContacts: [],
+  searchTerm: "",
 };
 
 const reducer = (state, action) => {
@@ -72,6 +74,18 @@ const reducer = (state, action) => {
       return {
         ...state,
         userContacts: action.userContacts,
+      };
+    }
+    case reducerCases.SET_CONTACTS_SEARCH: {
+      const filteredContacts = state.userContacts.filter((contact) => {
+        return contact.name
+          .toLowerCase()
+          .includes(action.searchTerm.trim().toLowerCase());
+      });
+      return {
+        ...state,
+        searchTerm: action.searchTerm,
+        filteredContacts: filteredContacts,
       };
     }
     default: {

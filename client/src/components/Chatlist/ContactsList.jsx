@@ -8,6 +8,8 @@ import ChatLIstItem from "@/components/Chatlist/ChatLIstItem";
 
 function ContactsList() {
   const [allContacts, setAllContacts] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredContacts, setFilteredContacts] = useState([]);
 
   const [{ userInfo }, dispatch] = useStateProvider();
 
@@ -25,6 +27,7 @@ function ContactsList() {
           data: { users },
         } = await axios.get(GET_ALL_CONTACTS);
         setAllContacts(users);
+        setFilteredContacts(users);
       } catch (error) {
         console.log(error);
       }
@@ -32,6 +35,26 @@ function ContactsList() {
 
     getContacts().then((r) => console.log(r));
   }, []);
+
+  useEffect(() => {
+    if (searchTerm.length) {
+      const filteredData = {};
+      Object.keys(allContacts).forEach((initialLetter) => {
+        const cur = allContacts[initialLetter].filter((user) => {
+          return user.name
+            .toLowerCase()
+            .includes(searchTerm.trim().toLowerCase());
+        });
+        if (cur.length) {
+          filteredData[initialLetter] = cur;
+        }
+      });
+      setFilteredContacts(filteredData);
+    } else {
+      setFilteredContacts(allContacts);
+    }
+  }, [searchTerm]);
+
   return (
     <div className="h-full flex flex-col ">
       <div className="h-24 flex items-end px-3 py-4">
@@ -55,12 +78,14 @@ function ContactsList() {
                 type="text"
                 placeholder="Search Contacts "
                 className="bg-transparent text-sm focus:outline-none text-white w-full"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
           </div>
         </div>
 
-        {Object.entries(allContacts).map(([initialLetter, userList]) => {
+        {Object.entries(filteredContacts).map(([initialLetter, userList]) => {
           return (
             <div key={initialLetter}>
               <div className="text-teal-light pl-10 py-5 ">
