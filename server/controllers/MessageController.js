@@ -218,8 +218,6 @@ export const getInitialChats = async (req, res, next) => {
       return b.createdAt.getTime() - a.createdAt.getTime();
     });
 
-    console.log(messages);
-
     const users = new Map();
     const messageStatusChange = [];
 
@@ -272,7 +270,6 @@ export const getInitialChats = async (req, res, next) => {
       }
     });
 
-    console.log(users);
     if (messageStatusChange.length > 0) {
       await prisma.messages.updateMany({
         where: {

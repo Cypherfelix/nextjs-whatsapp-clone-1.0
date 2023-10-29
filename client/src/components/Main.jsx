@@ -13,6 +13,8 @@ import { io } from "socket.io-client";
 import SearchMessages from "@/components/Chat/SearchMessages";
 import VideoCall from "@/components/Call/VideoCall";
 import VoiceCall from "@/components/Call/VoiceCall";
+import IncomingVideoCall from "@/components/common/IncomingVideoCall";
+import IncomingCall from "@/components/common/IncomingCall";
 
 function Main() {
   const [redirectLogin, setRedirectLogin] = useState(false);
@@ -89,7 +91,6 @@ function Main() {
     if (userInfo) {
       socket.current = io(HOST);
       socket.current.emit("add-user", userInfo.id);
-      console.log("Socket: ", socket.current);
       dispatch({
         type: reducerCases.SET_SOCKET,
         socket: socket,
@@ -99,14 +100,48 @@ function Main() {
 
   useEffect(() => {
     if (socket.current && !socketEvent) {
-      console.log("Socket Event");
       socket.current.on("msg-receive", (data) => {
-        console.log("Received: ", data);
         dispatch({
           type: reducerCases.ADD_MESSAGE,
           newMessage: { ...data.message },
         });
       });
+
+      socket.current.on("incoming-voice-call", (data) => {
+        dispatch({
+          type: reducerCases.SET_INCOMING_VOICE_CALL,
+          incomingVoiceCall: {
+            ...data.from,
+            callType: data.callType,
+            roomId: data.roomId,
+          },
+        });
+      });
+
+      socket.current.on("incoming-video-call", (data) => {
+        console.log("Incoming video call: ", data);
+        dispatch({
+          type: reducerCases.SET_INCOMING_VIDEO_CALL,
+          incomingVideoCall: {
+            ...data.from,
+            callType: data.callType,
+            roomId: data.roomId,
+          },
+        });
+      });
+
+      socket.current.on("voice-call-rejected", (data) => {
+        dispatch({
+          type: reducerCases.END_CALL,
+        });
+      });
+
+      socket.current.on("video-call-rejected", (data) => {
+        dispatch({
+          type: reducerCases.END_CALL,
+        });
+      });
+
       setSocketEvent(true);
     }
   }, [socket.current]);
@@ -137,6 +172,9 @@ function Main() {
 
   return (
     <>
+      {incomingVideoCall && <IncomingVideoCall />}
+      {incomingVoiceCall && <IncomingCall />}
+
       {videoCall && (
         <div className={"h-screen w-screen max-h-full overflow-hidden"}>
           <VideoCall />

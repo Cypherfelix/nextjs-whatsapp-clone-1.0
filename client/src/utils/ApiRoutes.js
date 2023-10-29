@@ -1,4 +1,4 @@
-export const HOST = process.env.BACKEND_URL || "http://localhost:3005";
+export const HOST = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 const AUTH_ROUTE = `${HOST}/api/auth`;
 const MESSAGE_ROUTE = `${HOST}/api/messages`;
@@ -8,6 +8,8 @@ export const CHECK_USER_ROUTE = `${AUTH_ROUTE}/check-user`;
 export const ONBOARD_USER_ROUTE = `${AUTH_ROUTE}/onboard-user`;
 
 export const GET_ALL_CONTACTS = `${AUTH_ROUTE}/get-contacts`;
+
+export const GET_CALL_TOKEN = `${AUTH_ROUTE}/generate-token`;
 
 export const ADD_MESSAGE_ROUTE = `${MESSAGE_ROUTE}/add-message`;
 
