@@ -1,12 +1,14 @@
 import React from "react";
 import dynamic from "next/dynamic";
+import { useStateProvider } from "@/context/StateContext";
 
 const Container = dynamic(() => import("@/components/Call/Container"), {
   ssr: false,
 });
 
 function VoiceCall() {
-  return <div>VoiceCall</div>;
+  const [{ voiceCall, socket, userInfo }] = useStateProvider();
+  return <Container data={voiceCall} />;
 }
 
 export default VoiceCall;

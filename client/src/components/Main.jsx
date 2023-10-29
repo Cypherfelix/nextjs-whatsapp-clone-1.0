@@ -147,17 +147,19 @@ function Main() {
           <VoiceCall />
         </div>
       )}
-      <div className="grid grid-cols-main h-screen w-screen max-h-screen max-w-full overflow-hidden ">
-        <ChatList />
-        {currentChatUser ? (
-          <div className={messageSearch ? "grid grid-cols-2" : "grid-cols-2"}>
-            <Chat />
-            {messageSearch && <SearchMessages />}
-          </div>
-        ) : (
-          <Empty />
-        )}
-      </div>
+      {!videoCall && !voiceCall && (
+        <div className="grid grid-cols-main h-screen w-screen max-h-screen max-w-full overflow-hidden ">
+          <ChatList />
+          {currentChatUser ? (
+            <div className={messageSearch ? "grid grid-cols-2" : "grid-cols-2"}>
+              <Chat />
+              {messageSearch && <SearchMessages />}
+            </div>
+          ) : (
+            <Empty />
+          )}
+        </div>
+      )}
     </>
   );
 }
