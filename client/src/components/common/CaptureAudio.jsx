@@ -225,7 +225,7 @@ function CaptureAudio({ hide }) {
       >
         {isRecording ? (
           <div className={"text-red-500 animate-pulse text-center"}>
-            Recording...
+            Recording... {formatTime(recordingDuration)}
           </div>
         ) : (
           <div>

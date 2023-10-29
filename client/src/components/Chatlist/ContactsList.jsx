@@ -67,9 +67,13 @@ function ContactsList() {
                 {" "}
                 {initialLetter}
               </div>
-              {userList.map((user) => {
-                return <ChatLIstItem key={user.id} user={user} isContactPage />;
-              })}
+              {userList
+                .filter((user) => user.id !== userInfo.id)
+                .map((user) => {
+                  return (
+                    <ChatLIstItem key={user.id} user={user} isContactPage />
+                  );
+                })}
             </div>
           );
         })}

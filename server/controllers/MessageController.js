@@ -182,13 +182,118 @@ export const addAudioMessage = async (req, res, next) => {
 
 export const getInitialChats = async (req, res, next) => {
   try {
-    const userId = parseInt(req.params.userId);
+    let { userId } = req.params;
+    userId = parseInt(userId);
+
     const prisma = getPrismaInstance();
 
-    const user = await prisma.users.findUnique({
+    const user = await prisma.user.findUnique({
       where: {
         id: userId,
       },
+      include: {
+        sentMessages: {
+          include: {
+            sender: true,
+            receiver: true,
+          },
+          orderBy: {
+            id: "desc",
+          },
+        },
+        receivedMessages: {
+          include: {
+            sender: true,
+            receiver: true,
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+        },
+      },
+    });
+
+    const messages = [...user.sentMessages, ...user.receivedMessages];
+    messages.sort((a, b) => {
+      return b.createdAt.getTime() - a.createdAt.getTime();
+    });
+
+    console.log(messages);
+
+    const users = new Map();
+    const messageStatusChange = [];
+
+    messages.forEach((msg) => {
+      const iSender = msg.senderId === userId;
+      const calculatedId = iSender ? msg.receiverId : msg.senderId;
+      if (msg.messageStatus === "sent" && !iSender) {
+        messageStatusChange.push(msg.id);
+      }
+      const {
+        id,
+        type,
+        message,
+        messageStatus,
+        createdAt,
+        senderId,
+        receiverId,
+      } = msg;
+      if (!users.get(calculatedId)) {
+        let user = {
+          messageId: id,
+          type,
+          message,
+          messageStatus,
+          createdAt,
+          senderId,
+          receiverId,
+        };
+        if (iSender) {
+          user = {
+            ...user,
+            ...msg.receiver,
+            totalUnreadMessages: 0,
+          };
+        } else {
+          user = {
+            ...user,
+            ...msg.sender,
+            totalUnreadMessages: messageStatus !== "read" ? 1 : 0,
+          };
+        }
+
+        users.set(calculatedId, { ...user });
+      } else if (msg.messageStatus !== "read" && !iSender) {
+        const user = users.get(calculatedId);
+        users.set(calculatedId, {
+          ...user,
+          totalUnreadMessages: user.totalUnreadMessages + 1,
+        });
+      }
+    });
+
+    console.log(users);
+    if (messageStatusChange.length > 0) {
+      await prisma.messages.updateMany({
+        where: {
+          id: {
+            in: messageStatusChange,
+          },
+        },
+        data: {
+          messageStatus: "delivered",
+        },
+      });
+    }
+
+    const usersArray = Array.from(users.values()).filter(
+      (user) => user.id !== userId,
+    );
+    return res.status(200).json({
+      users: usersArray,
+      onlineUsers: Array.from(onlineUsers.keys()).filter(
+        (user) => user !== userId,
+      ),
     });
   } catch (e) {
     next(e);
